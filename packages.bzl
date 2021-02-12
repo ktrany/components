@@ -9,6 +9,7 @@ VERSION_PLACEHOLDER_REPLACEMENTS = {
     "0.0.0-MDC": MDC_PACKAGE_VERSION,
     "0.0.0-NG": ANGULAR_PACKAGE_VERSION,
     "0.0.0-TSLIB": TSLIB_PACKAGE_VERSION,
+    "0.0.0-PLACEHOLDER": "{BUILD_SCM_VERSION}",
 }
 
 # List of default Angular library UMD bundles which are not processed by ngcc.

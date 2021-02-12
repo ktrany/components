@@ -15,7 +15,7 @@ describe('CDK ng-add', () => {
 
   it('should update the package.json', async () => {
     const tree = await runner.runSchematicAsync('ng-add', {}, appTree).toPromise();
-    const packageJson = JSON.parse(getFileContent(tree, '/package.json'));
+    const packageJson = JSON.parse(getFileContent(tree, '/package.json')) as any; // todo
     const dependencies = packageJson.dependencies;
 
     expect(dependencies['@angular/cdk']).toBe('~0.0.0-PLACEHOLDER');
@@ -33,7 +33,7 @@ describe('CDK ng-add', () => {
     addPackageToPackageJson(appTree, '@angular/cdk', '^9.0.0');
 
     const tree = await runner.runSchematicAsync('ng-add', {}, appTree).toPromise();
-    const packageJson = JSON.parse(getFileContent(tree, '/package.json'));
+    const packageJson = JSON.parse(getFileContent(tree, '/package.json')) as any; // todo
     const dependencies = packageJson.dependencies;
 
     expect(dependencies['@angular/cdk']).toBe('^9.0.0');

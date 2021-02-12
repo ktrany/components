@@ -43,7 +43,7 @@ describe('ng-add schematic', () => {
 
   /** Removes the specified dependency from the /package.json in the given tree. */
   function removePackageJsonDependency(tree: Tree, dependencyName: string) {
-    const packageContent = JSON.parse(getFileContent(tree, '/package.json'));
+    const packageContent = JSON.parse(getFileContent(tree, '/package.json')) as any; // TODO
     delete packageContent.dependencies[dependencyName];
     tree.overwrite('/package.json', JSON.stringify(packageContent, null, 2));
   }
@@ -55,7 +55,7 @@ describe('ng-add schematic', () => {
     removePackageJsonDependency(appTree, '@angular/animations');
 
     const tree = await runner.runSchematicAsync('ng-add', {}, appTree).toPromise();
-    const packageJson = JSON.parse(getFileContent(tree, '/package.json'));
+    const packageJson = JSON.parse(getFileContent(tree, '/package.json')) as any; // TODO - any fix
     const dependencies = packageJson.dependencies;
     const angularCoreVersion = dependencies['@angular/core'];
 
@@ -87,7 +87,7 @@ describe('ng-add schematic', () => {
     addPackageToPackageJson(appTree, '@angular/material', '^9.0.0');
 
     const tree = await runner.runSchematicAsync('ng-add', {}, appTree).toPromise();
-    const packageJson = JSON.parse(getFileContent(tree, '/package.json'));
+    const packageJson = JSON.parse(getFileContent(tree, '/package.json')) as any; // TODO - any fix
     const dependencies = packageJson.dependencies;
 
     expect(dependencies['@angular/material']).toBe('^9.0.0');
