@@ -78,8 +78,9 @@ if (all) {
     console.warn(chalk.yellow("Tests will be run in non-watch mode.."));
   }
   shelljs.exec(
-    `yarn -s bazel test  --discard_analysis_cache --nokeep_state_after_build --notrack_incremental_state --test_tag_filters=-e2e,browser:${browserName} ` +
-      `--build_tag_filters=browser:${browserName} --build_tests_only ${configFlag} //src/...`
+    `yarn -s bazel --host_jvm_args=-Xmx1g test --test_tag_filters=-e2e,browser:${browserName} ` +
+      `--build_tag_filters=browser:${browserName} --build_tests_only ${configFlag} //src/... ` +
+      "--discard_analysis_cache"
   );
   return;
 }
