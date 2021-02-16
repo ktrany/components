@@ -178,6 +178,7 @@ module.exports = (config) => {
 
     browsers: ["ChromeHeadless"],
     singleRun: false,
+    concurrency: 1,
 
     // Try Websocket for a faster transmission first. Fallback to polling if necessary.
     transports: ["websocket", "polling"],
