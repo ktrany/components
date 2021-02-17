@@ -38,4 +38,4 @@ RUN git init && yarn \
 
 USER pptruser
 
-CMD ["yarn", "test", "all"]
+CMD ["yarn", "build"]
