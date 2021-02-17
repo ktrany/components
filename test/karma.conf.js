@@ -143,40 +143,37 @@ module.exports = (config) => {
       { pattern: "dist/packages/**/*", included: false, watched: true },
     ],
 
-    customLaunchers: {
-      ChromeHeadlessNoSandbox: {
-        base: "ChromeHeadless",
-        flags: ["--no-sandbox"],
-      },
-    },
+    customLaunchers: customLaunchers,
 
     preprocessors: { "dist/packages/**/*.js": ["sourcemap"] },
 
     reporters: ["dots"],
     autoWatch: false,
 
-    sauceLabs: {
-      testName: "Angular Material Unit Tests",
-      startConnect: false,
-      recordVideo: false,
-      recordScreenshots: false,
-      idleTimeout: 1000,
-      commandTimeout: 600,
-      maxDuration: 5400,
-    },
+    // sauceLabs: {
+    //   testName: "Angular Material Unit Tests",
+    //   startConnect: false,
+    //   recordVideo: false,
+    //   recordScreenshots: false,
+    //   idleTimeout: 1000,
+    //   commandTimeout: 600,
+    //   maxDuration: 5400,
+    // },
 
-    browserStack: {
-      project: "Angular Material Unit Tests",
-      startTunnel: true,
-      retryLimit: 3,
-      timeout: 1800,
-      video: false,
-    },
+    // browserStack: {
+    //   project: "Angular Material Unit Tests",
+    //   startTunnel: true,
+    //   retryLimit: 3,
+    //   timeout: 1800,
+    //   video: false,
+    // },
 
-    browserDisconnectTolerance: 1,
+    browserDisconnectTolerance: 3,
     browserNoActivityTimeout: 300000,
+    browserDisconnectTimeout = 180000,
+    captureTimeout = 180000,
 
-    browsers: ["ChromeHeadless"],
+    browsers: ["ChromeHeadlessCI"],
     singleRun: false,
     concurrency: 1,
 
@@ -193,67 +190,67 @@ module.exports = (config) => {
     },
   });
 
-  if (process.env["CIRCLECI"]) {
-    const containerInstanceIndex = Number(process.env["CIRCLE_NODE_INDEX"]);
-    const maxParallelContainerInstances = Number(
-      process.env["CIRCLE_NODE_TOTAL"]
-    );
-    const tunnelIdentifier = `angular-material-${process.env["CIRCLE_BUILD_NUM"]}-${containerInstanceIndex}`;
-    const buildIdentifier = `circleci-${tunnelIdentifier}`;
-    const testPlatform = process.env["TEST_PLATFORM"];
+  // if (process.env["CIRCLECI"]) {
+  //   const containerInstanceIndex = Number(process.env["CIRCLE_NODE_INDEX"]);
+  //   const maxParallelContainerInstances = Number(
+  //     process.env["CIRCLE_NODE_TOTAL"]
+  //   );
+  //   const tunnelIdentifier = `angular-material-${process.env["CIRCLE_BUILD_NUM"]}-${containerInstanceIndex}`;
+  //   const buildIdentifier = `circleci-${tunnelIdentifier}`;
+  //   const testPlatform = process.env["TEST_PLATFORM"];
 
-    // This defines how often a given browser should be launched in the same CircleCI
-    // container. This is helpful if we want to shard tests across the same browser.
-    const parallelBrowserInstances =
-      Number(process.env["KARMA_PARALLEL_BROWSERS"]) || 1;
+  //   // This defines how often a given browser should be launched in the same CircleCI
+  //   // container. This is helpful if we want to shard tests across the same browser.
+  //   const parallelBrowserInstances =
+  //     Number(process.env["KARMA_PARALLEL_BROWSERS"]) || 1;
 
-    // In case there should be multiple instances of the browsers, we need to set up the
-    // the karma-parallel plugin.
-    if (parallelBrowserInstances > 1) {
-      config.frameworks.unshift("parallel");
-      config.plugins.push(require("karma-parallel"));
-      config.parallelOptions = {
-        executors: parallelBrowserInstances,
-        shardStrategy: "round-robin",
-      };
-    }
+  //   // In case there should be multiple instances of the browsers, we need to set up the
+  //   // the karma-parallel plugin.
+  //   if (parallelBrowserInstances > 1) {
+  //     config.frameworks.unshift("parallel");
+  //     config.plugins.push(require("karma-parallel"));
+  //     config.parallelOptions = {
+  //       executors: parallelBrowserInstances,
+  //       shardStrategy: "round-robin",
+  //     };
+  //   }
 
-    if (testPlatform === "browserstack") {
-      config.browserStack.build = buildIdentifier;
-      config.browserStack.tunnelIdentifier = tunnelIdentifier;
-      config.browserDisconnectTimeout = 180000;
-      config.browserDisconnectTolerance = 3;
-      config.captureTimeout = 180000;
-    } else if (testPlatform === "saucelabs") {
-      config.sauceLabs.build = buildIdentifier;
-      config.sauceLabs.tunnelIdentifier = tunnelIdentifier;
-      // Setup the saucelabs reporter so that we report back to Saucelabs once
-      // our tests finished.
-      config.reporters.push("saucelabs");
-      config.browserDisconnectTimeout = 180000;
-      config.browserDisconnectTolerance = 3;
-      config.captureTimeout = 180000;
-    }
+  //   if (testPlatform === "browserstack") {
+  //     config.browserStack.build = buildIdentifier;
+  //     config.browserStack.tunnelIdentifier = tunnelIdentifier;
+  //     config.browserDisconnectTimeout = 180000;
+  //     config.browserDisconnectTolerance = 3;
+  //     config.captureTimeout = 180000;
+  //   } else if (testPlatform === "saucelabs") {
+  //     config.sauceLabs.build = buildIdentifier;
+  //     config.sauceLabs.tunnelIdentifier = tunnelIdentifier;
+  //     // Setup the saucelabs reporter so that we report back to Saucelabs once
+  //     // our tests finished.
+  //     config.reporters.push("saucelabs");
+  //     config.browserDisconnectTimeout = 180000;
+  //     config.browserDisconnectTolerance = 3;
+  //     config.captureTimeout = 180000;
+  //   }
 
-    // If the test platform is not "local", browsers are launched externally and can take
-    // up more time to capture. Also the connection can be flaky and therefore needs a
-    // higher disconnect timeout.
-    if (testPlatform !== "local") {
-      config.browserDisconnectTimeout = 180000;
-      config.browserDisconnectTolerance = 3;
-      config.captureTimeout = 180000;
-    }
+  //   // If the test platform is not "local", browsers are launched externally and can take
+  //   // up more time to capture. Also the connection can be flaky and therefore needs a
+  //   // higher disconnect timeout.
+  //   if (testPlatform !== "local") {
+  //     config.browserDisconnectTimeout = 180000;
+  //     config.browserDisconnectTolerance = 3;
+  //     config.captureTimeout = 180000;
+  //   }
 
-    const platformBrowsers = platformMap[testPlatform];
-    const browserInstanceChunks = splitBrowsersIntoInstances(
-      platformBrowsers,
-      maxParallelContainerInstances
-    );
+  //   const platformBrowsers = platformMap[testPlatform];
+  //   const browserInstanceChunks = splitBrowsersIntoInstances(
+  //     platformBrowsers,
+  //     maxParallelContainerInstances
+  //   );
 
-    // Configure Karma to launch the browsers that belong to the given test platform and
-    // container instance.
-    config.browsers = browserInstanceChunks[containerInstanceIndex];
-  }
+  //   // Configure Karma to launch the browsers that belong to the given test platform and
+  //   // container instance.
+  //   config.browsers = browserInstanceChunks[containerInstanceIndex];
+  // }
 };
 
 /**

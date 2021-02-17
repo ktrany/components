@@ -3,7 +3,9 @@
     "base": "ChromeHeadless",
     "flags": [
       "--window-size=1024,768",
-      "--no-sandbox"
+      "--no-sandbox",
+      "--browser-test",
+      "--renderer-process-limit=2"
     ]
   },
   "ChromeLocalDebug": {
