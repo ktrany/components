@@ -170,8 +170,8 @@ module.exports = (config) => {
 
     browserDisconnectTolerance: 3,
     browserNoActivityTimeout: 300000,
-    browserDisconnectTimeout = 180000,
-    captureTimeout = 180000,
+    browserDisconnectTimeout: 180000,
+    captureTimeout: 180000,
 
     browsers: ["ChromeHeadlessCI"],
     singleRun: false,
